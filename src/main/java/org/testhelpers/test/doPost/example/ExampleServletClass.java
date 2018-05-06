@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,8 +25,7 @@ public class ExampleServletClass extends HttpServlet {
 	}
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// set response headers
 		response.setContentType("text/html");
@@ -45,16 +45,15 @@ public class ExampleServletClass extends HttpServlet {
 	}
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String user = request.getParameter("user");
 
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
-		
+
 		String name = exampleDaoClass.getName(1);
 		String lastName = exampleDaoClass.getLastName(1);
-		
+
 		// create HTML response
 		PrintWriter writer = response.getWriter();
 		writer.append("<!DOCTYPE html>\r\n").append("<html>\r\n").append("		<head>\r\n")
@@ -67,6 +66,10 @@ public class ExampleServletClass extends HttpServlet {
 			writer.append("	You did not entered a name!\r\n");
 		}
 		writer.append("		</body>\r\n").append("</html>\r\n");
+
+		Cookie cookie = new Cookie("CookieName", "CookieValue");
+		response.addCookie(cookie);
+
 	}
 
 }

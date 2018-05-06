@@ -1,5 +1,9 @@
 package org.testhelpers.test.doPost;
 
+import java.util.List;
+
+import javax.servlet.http.Cookie;
+
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.testhelpers.test.doPost.example.ExampleDaoClass;
@@ -18,14 +22,15 @@ public class Test_HttpServletRequestResponseTestObject {
 		testObj.addObjectToServletAsMocked("exampleDaoClass", dao);
 
 		PowerMockito.when(dao.getName(1)).thenReturn("test");
-		
+
 		testObj.addRequestAttribute("user", "Paul");
 		testObj.addRequestParameter("user", "Paul");
 
 		testObj.triggerServletDoPost();
 
 		String data = testObj.getWriterData();
-		System.out.println(data);
+
+		List<Cookie> cookieResponse = testObj.getCookiesInHttpResponse();
 
 	}
 

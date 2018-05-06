@@ -84,7 +84,8 @@ public class HttpServletRequestResponseObjects {
 			private boolean requestedSessionIdValid;
 			private boolean userInRole;
 			private Enumeration locales;
-			private ServletInputStream stream;
+			private ServletInputStream servletInputStream;
+			private String path;
 
 			public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {
 				characterEncoding = arg0;
@@ -118,6 +119,7 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public RequestDispatcher getRequestDispatcher(String arg0) {
+				path = arg0;
 				RequestDispatcher requestDispatcher = new RequestDispatcher() {
 
 					public void include(ServletRequest arg0, ServletResponse arg1)
@@ -222,7 +224,7 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public ServletInputStream getInputStream() throws IOException {
-				stream = new ServletInputStream() {
+				servletInputStream = new ServletInputStream() {
 
 					@Override
 					public int read() throws IOException {
@@ -230,7 +232,7 @@ public class HttpServletRequestResponseObjects {
 						return 0;
 					}
 				};
-				return stream;
+				return servletInputStream;
 			}
 
 			public String getContentType() {
@@ -375,14 +377,13 @@ public class HttpServletRequestResponseObjects {
 
 	protected HttpServletResponse getResponse() {
 		response = new HttpServletResponse() {
-			Locale locale;
-			String contentType;
-			int contentLength;
-			String characterEncoding;
-			int bufferSize;
-
-			PrintWriter writer;
-			StringBuilder writerData = new StringBuilder();
+			private Locale locale;
+			private String contentType;
+			private int contentLength;
+			private String characterEncoding;
+			private int bufferSize;
+			private PrintWriter writer;
+			private StringBuilder writerData = new StringBuilder();
 			private int sendError;
 			private String encodeUrl;
 			private String encodeURL;
