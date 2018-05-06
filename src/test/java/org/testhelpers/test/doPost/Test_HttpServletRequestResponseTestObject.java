@@ -1,5 +1,7 @@
 package org.testhelpers.test.doPost;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -31,6 +33,8 @@ public class Test_HttpServletRequestResponseTestObject {
 		String data = testObj.getWriterData();
 
 		List<Cookie> cookieResponse = testObj.getCookiesInHttpResponse();
+
+		assertEquals(cookieResponse.get(0).getName(), "CookieName");
 
 	}
 
