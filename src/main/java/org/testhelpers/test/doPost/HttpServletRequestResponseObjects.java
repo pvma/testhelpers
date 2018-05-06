@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,6 +47,11 @@ public class HttpServletRequestResponseObjects {
 
 	protected HttpServletRequest getRequest() {
 		request = new HttpServletRequest() {
+			int serverPort;
+			boolean isSecure;
+			String serverName;
+			String scheme;
+			
 			public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {
 				// TODO Auto-generated method stub
 
@@ -130,7 +136,15 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public String[] getParameterValues(String arg0) {
-				// TODO Auto-generated method stub
+				if (paramMap != null) {
+					String[] parameterValues = new String[paramMap.size()];
+					int i = 0;
+					for(Entry<String, String> entry: paramMap.entrySet()) {
+				        parameterValues[i] = entry.getValue();
+				        i++;
+				    }
+					return parameterValues;
+				}
 				return null;
 			}
 
