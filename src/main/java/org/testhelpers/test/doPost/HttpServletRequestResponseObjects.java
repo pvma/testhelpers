@@ -2,7 +2,6 @@ package org.testhelpers.test.doPost;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -16,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
@@ -25,43 +25,55 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
 public class HttpServletRequestResponseObjects {
 	HttpServletRequest request;
 	HttpServletResponse response;
+	HttpSession httpSession;
 	Map<String, String> paramMap = new HashMap<String, String>();
 	Map<String, Object> attributeMap = new HashMap<String, Object>();
 
+	Map<String, String> requestHeaders = new HashMap<String, String>();
 	Map<String, String> responseHeaders = new HashMap<String, String>();
-
-	Enumeration headers = new Enumeration<String>() {
-
-		public boolean hasMoreElements() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public String nextElement() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-	};
 
 	protected HttpServletRequest getRequest() {
 		request = new HttpServletRequest() {
-			int serverPort;
-			boolean isSecure;
-			String serverName;
-			String scheme;
-			Locale locale;
-			int localPort;
-			int remotePort;
-			String remoteHost;
-			String remoteAddr;
-			String realPath;
-			BufferedReader reader;
-			String protocol;
-
+			private int serverPort;
+			private boolean isSecure;
+			private String serverName;
+			private String scheme;
+			private Locale locale;
+			private int localPort;
+			private int remotePort;
+			private String remoteHost;
+			private String remoteAddr;
+			private String realPath;
+			private BufferedReader reader;
+			private String protocol;
+			private String localName;
+			private String localAddr;
+			private String contentType;
+			private int contentLength;
+			private String characterEncoding;
+			private String authType;
+			private String contextPath;
+			private Cookie[] cookies;
+			private String method;
+			private String pathInfo;
+			private String pathTranslated;
+			private String queryString;
+			private String remoteUser;
+			private String requestURI;
+			private StringBuffer requestURL;
+			private String requestedSessionId;
+			private String servletPath;
+			private Principal userPrincipal;
+			private boolean requestedSessionIdFromCookie;
+			private boolean requestedSessionIdFromURL;
+			private boolean requestedSessionIdFromUrl;
+			private boolean requestedSessionIdValid;
+			private boolean userInRole;
 
 			public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {
 				// TODO Auto-generated method stub
@@ -129,19 +141,19 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public BufferedReader getReader() throws IOException {
-				if(reader == null) {
+				if (reader == null) {
 					reader = new BufferedReader(new Reader() {
-						
+
 						@Override
 						public int read(char[] cbuf, int off, int len) throws IOException {
 							// TODO Auto-generated method stub
 							return 0;
 						}
-						
+
 						@Override
 						public void close() throws IOException {
 							// TODO Auto-generated method stub
-							
+
 						}
 					});
 				}
@@ -149,8 +161,7 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public String getProtocol() {
-				// TODO Auto-generated method stub
-				return null;
+				return protocol;
 			}
 
 			public String[] getParameterValues(String arg0) {
@@ -206,113 +217,101 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public String getContentType() {
-				// TODO Auto-generated method stub
-				return null;
+				return contentType;
 			}
 
 			public int getContentLength() {
-				// TODO Auto-generated method stub
-				return 0;
+				return contentLength;
 			}
 
 			public String getCharacterEncoding() {
-				// TODO Auto-generated method stub
-				return null;
+				return characterEncoding;
 			}
 
 			public Enumeration getAttributeNames() {
-				// TODO Auto-generated method stub
-				return null;
+				Enumeration<String> attributeNames = Collections.enumeration(attributeMap.keySet());
+				return attributeNames;
 			}
 
 			public Object getAttribute(String arg0) {
-				// TODO Auto-generated method stub
+				if (attributeMap != null) {
+					return attributeMap.get(arg0);
+				}
 				return null;
 			}
 
 			public boolean isUserInRole(String arg0) {
-				// TODO Auto-generated method stub
-				return false;
+				return userInRole;
 			}
 
 			public boolean isRequestedSessionIdValid() {
-				// TODO Auto-generated method stub
-				return false;
+				return requestedSessionIdValid;
 			}
 
 			public boolean isRequestedSessionIdFromUrl() {
-				// TODO Auto-generated method stub
-				return false;
+				return requestedSessionIdFromUrl;
 			}
 
 			public boolean isRequestedSessionIdFromURL() {
-				// TODO Auto-generated method stub
-				return false;
+				return requestedSessionIdFromURL;
 			}
 
 			public boolean isRequestedSessionIdFromCookie() {
-				// TODO Auto-generated method stub
-				return false;
+				return requestedSessionIdFromCookie;
 			}
 
 			public Principal getUserPrincipal() {
-				// TODO Auto-generated method stub
-				return null;
+				return userPrincipal;
 			}
 
 			public HttpSession getSession(boolean arg0) {
-				// TODO Auto-generated method stub
-				return null;
+				if (arg0) {
+					httpSession = getHttpSession();
+				}
+				return httpSession;
 			}
 
 			public HttpSession getSession() {
-				// TODO Auto-generated method stub
-				return null;
+				if (httpSession == null) {
+					httpSession = getHttpSession();
+				}
+				return httpSession;
 			}
 
 			public String getServletPath() {
-				// TODO Auto-generated method stub
-				return null;
+				return servletPath;
 			}
 
 			public String getRequestedSessionId() {
-				// TODO Auto-generated method stub
-				return null;
+				return requestedSessionId;
 			}
 
 			public StringBuffer getRequestURL() {
-				// TODO Auto-generated method stub
-				return null;
+				return requestURL;
 			}
 
 			public String getRequestURI() {
-				// TODO Auto-generated method stub
-				return null;
+				return requestURI;
 			}
 
 			public String getRemoteUser() {
-				// TODO Auto-generated method stub
-				return null;
+				return remoteUser;
 			}
 
 			public String getQueryString() {
-				// TODO Auto-generated method stub
-				return null;
+				return queryString;
 			}
 
 			public String getPathTranslated() {
-				// TODO Auto-generated method stub
-				return null;
+				return pathTranslated;
 			}
 
 			public String getPathInfo() {
-				// TODO Auto-generated method stub
-				return null;
+				return pathInfo;
 			}
 
 			public String getMethod() {
-				// TODO Auto-generated method stub
-				return null;
+				return method;
 			}
 
 			public int getIntHeader(String arg0) {
@@ -326,12 +325,14 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public Enumeration getHeaderNames() {
-				// TODO Auto-generated method stub
-				return null;
+				Enumeration<String> requestHeaderNames = Collections.enumeration(requestHeaders.keySet());
+				return requestHeaderNames;
 			}
 
 			public String getHeader(String arg0) {
-				// TODO Auto-generated method stub
+				if (requestHeaders != null) {
+					return requestHeaders.get(arg0);
+				}
 				return null;
 			}
 
@@ -341,18 +342,15 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public Cookie[] getCookies() {
-				// TODO Auto-generated method stub
-				return null;
+				return cookies;
 			}
 
 			public String getContextPath() {
-				// TODO Auto-generated method stub
-				return null;
+				return contextPath;
 			}
 
 			public String getAuthType() {
-				// TODO Auto-generated method stub
-				return null;
+				return authType;
 			}
 		};
 		return request;
@@ -548,6 +546,97 @@ public class HttpServletRequestResponseObjects {
 			}
 		};
 		return response;
+	}
+
+	private HttpSession getHttpSession() {
+		httpSession = new HttpSession() {
+
+			public void setMaxInactiveInterval(int interval) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void setAttribute(String name, Object value) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void removeValue(String name) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void removeAttribute(String name) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void putValue(String name, Object value) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public boolean isNew() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public void invalidate() {
+				// TODO Auto-generated method stub
+
+			}
+
+			public String[] getValueNames() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Object getValue(String name) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public HttpSessionContext getSessionContext() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public ServletContext getServletContext() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public int getMaxInactiveInterval() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			public long getLastAccessedTime() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			public String getId() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public long getCreationTime() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			public Enumeration getAttributeNames() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Object getAttribute(String name) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+		return httpSession;
 	}
 
 }
