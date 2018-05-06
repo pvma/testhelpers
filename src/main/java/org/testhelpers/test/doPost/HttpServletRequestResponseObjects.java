@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -29,7 +31,7 @@ public class HttpServletRequestResponseObjects {
 	HttpServletResponse response;
 	Map<String, String> paramMap = new HashMap<String, String>();
 	Map<String, Object> attributeMap = new HashMap<String, Object>();
-	
+
 	Map<String, String> responseHeaders = new HashMap<String, String>();
 
 	Enumeration headers = new Enumeration<String>() {
@@ -51,7 +53,16 @@ public class HttpServletRequestResponseObjects {
 			boolean isSecure;
 			String serverName;
 			String scheme;
-			
+			Locale locale;
+			int localPort;
+			int remotePort;
+			String remoteHost;
+			String remoteAddr;
+			String realPath;
+			BufferedReader reader;
+			String protocol;
+
+
 			public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {
 				// TODO Auto-generated method stub
 
@@ -68,23 +79,19 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public boolean isSecure() {
-				// TODO Auto-generated method stub
-				return false;
+				return isSecure;
 			}
 
 			public int getServerPort() {
-				// TODO Auto-generated method stub
-				return 0;
+				return serverPort;
 			}
 
 			public String getServerName() {
-				// TODO Auto-generated method stub
-				return null;
+				return serverName;
 			}
 
 			public String getScheme() {
-				// TODO Auto-generated method stub
-				return null;
+				return scheme;
 			}
 
 			public RequestDispatcher getRequestDispatcher(String arg0) {
@@ -106,28 +113,39 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public int getRemotePort() {
-				// TODO Auto-generated method stub
-				return 0;
+				return remotePort;
 			}
 
 			public String getRemoteHost() {
-				// TODO Auto-generated method stub
-				return null;
+				return remoteHost;
 			}
 
 			public String getRemoteAddr() {
-				// TODO Auto-generated method stub
-				return null;
+				return remoteAddr;
 			}
 
 			public String getRealPath(String arg0) {
-				// TODO Auto-generated method stub
-				return null;
+				return realPath;
 			}
 
 			public BufferedReader getReader() throws IOException {
-				// TODO Auto-generated method stub
-				return null;
+				if(reader == null) {
+					reader = new BufferedReader(new Reader() {
+						
+						@Override
+						public int read(char[] cbuf, int off, int len) throws IOException {
+							// TODO Auto-generated method stub
+							return 0;
+						}
+						
+						@Override
+						public void close() throws IOException {
+							// TODO Auto-generated method stub
+							
+						}
+					});
+				}
+				return reader;
 			}
 
 			public String getProtocol() {
@@ -139,18 +157,18 @@ public class HttpServletRequestResponseObjects {
 				if (paramMap != null) {
 					String[] parameterValues = new String[paramMap.size()];
 					int i = 0;
-					for(Entry<String, String> entry: paramMap.entrySet()) {
-				        parameterValues[i] = entry.getValue();
-				        i++;
-				    }
+					for (Entry<String, String> entry : paramMap.entrySet()) {
+						parameterValues[i] = entry.getValue();
+						i++;
+					}
 					return parameterValues;
 				}
 				return null;
 			}
 
 			public Enumeration getParameterNames() {
-				// TODO Auto-generated method stub
-				return null;
+				Enumeration<String> parameterNames = Collections.enumeration(paramMap.keySet());
+				return parameterNames;
 			}
 
 			public Map getParameterMap() {
@@ -167,23 +185,19 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public Locale getLocale() {
-				// TODO Auto-generated method stub
-				return null;
+				return locale;
 			}
 
 			public int getLocalPort() {
-				// TODO Auto-generated method stub
-				return 0;
+				return localPort;
 			}
 
 			public String getLocalName() {
-				// TODO Auto-generated method stub
-				return null;
+				return localName;
 			}
 
 			public String getLocalAddr() {
-				// TODO Auto-generated method stub
-				return null;
+				return localAddr;
 			}
 
 			public ServletInputStream getInputStream() throws IOException {
@@ -351,7 +365,7 @@ public class HttpServletRequestResponseObjects {
 			int contentLength;
 			String characterEncoding;
 			int bufferSize;
-			
+
 			PrintWriter writer;
 			StringBuilder writerData = new StringBuilder();
 
@@ -399,23 +413,23 @@ public class HttpServletRequestResponseObjects {
 
 				if (writer == null) {
 					writer = new PrintWriter(new Writer() {
-						
+
 						@Override
 						public void write(char[] cbuf, int off, int len) throws IOException {
 							writerData.append(cbuf, off, len);
-							
+
 						}
-						
+
 						@Override
 						public void flush() throws IOException {
 							// TODO Auto-generated method stub
-							
+
 						}
-						
+
 						@Override
 						public void close() throws IOException {
 							// TODO Auto-generated method stub
-							
+
 						}
 					});
 				}
