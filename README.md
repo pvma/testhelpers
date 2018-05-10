@@ -1,5 +1,5 @@
 # testhelpers
-(Not yet complete! Work In Progress, but you'll get the idea)
+(Still a lot of things to add, but it should cover now the basic of testing doPost)
 
 The idea here is to test directly the doPost and doGet of Java Servlets.
 
