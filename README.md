@@ -37,5 +37,6 @@ public void test_01() {
 ```
 
 ## Future
-- Need to add more testers for other MVC frameworks
-- Need to complete all HTTP Servlet Request/Response setting of variables 
+- Need to add more testers for other MVC frameworks such as Spring, Sling, Struts, Stripes
+- Need to complete all HTTP Servlet Request/Response setting of variables
+- Maybe add also the testing of Web Services such as REST / SOAP?
