@@ -1,6 +1,9 @@
 package org.testhelpers.test.doPost;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -11,9 +14,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,6 +50,14 @@ public class HttpServletRequestResponseObjects {
 	Map<String, Object> responseHeaders = new HashMap<String, Object>();
 
 	Map<String, Object> requestHttpSessionAttributeMap = new HashMap<String, Object>();
+
+	Map<String, Object> responseServletContextMap = new HashMap<String, Object>();
+
+	Map<Object, Object> responseServletContextLog = new HashMap<Object, Object>();
+
+	List<Servlet> responseServletContextServlets = new ArrayList<Servlet>();
+	Set<String> responseServletContextResource = new HashSet<String>();
+	Map<String, String> responseServletContextInitParameter = new HashMap<String, String>();
 
 	protected HttpServletRequest getRequest() {
 		request = new HttpServletRequest() {
@@ -124,13 +137,13 @@ public class HttpServletRequestResponseObjects {
 
 					public void include(ServletRequest arg0, ServletResponse arg1)
 							throws ServletException, IOException {
-						// TODO Auto-generated method stub
+						// do nothing
 
 					}
 
 					public void forward(ServletRequest arg0, ServletResponse arg1)
 							throws ServletException, IOException {
-						// TODO Auto-generated method stub
+						// do nothing
 
 					}
 				};
@@ -159,14 +172,13 @@ public class HttpServletRequestResponseObjects {
 
 						@Override
 						public int read(char[] cbuf, int off, int len) throws IOException {
-							// TODO Auto-generated method stub
+							// do nothing
 							return 0;
 						}
 
 						@Override
 						public void close() throws IOException {
-							// TODO Auto-generated method stub
-
+							// do nothing
 						}
 					});
 				}
@@ -228,7 +240,6 @@ public class HttpServletRequestResponseObjects {
 
 					@Override
 					public int read() throws IOException {
-						// TODO Auto-generated method stub
 						return 0;
 					}
 				};
@@ -334,12 +345,21 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public int getIntHeader(String arg0) {
-				// TODO Auto-generated method stub
+				if (requestHeaders != null) {
+					return Integer.parseInt(requestHeaders.get(arg0));
+				}
 				return 0;
 			}
 
 			public Enumeration getHeaders(String arg0) {
-				// TODO Auto-generated method stub
+				if (requestHeaders != null) {
+					String headers = requestHeaders.get(arg0);
+					if (headers != null && headers.trim().length() > 0) {
+						Enumeration<String> requestHeaderNames = Collections
+								.enumeration(Arrays.asList(headers.split(" ")));
+						return requestHeaderNames;
+					}
+				}
 				return null;
 			}
 
@@ -356,7 +376,9 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public long getDateHeader(String arg0) {
-				// TODO Auto-generated method stub
+				if (requestHeaders != null) {
+					return Long.parseLong(requestHeaders.get(arg0));
+				}
 				return 0;
 			}
 
@@ -447,13 +469,13 @@ public class HttpServletRequestResponseObjects {
 
 						@Override
 						public void flush() throws IOException {
-							// TODO Auto-generated method stub
+							// do nothing
 
 						}
 
 						@Override
 						public void close() throws IOException {
-							// TODO Auto-generated method stub
+							// do nothing
 
 						}
 					});
@@ -639,7 +661,7 @@ public class HttpServletRequestResponseObjects {
 			}
 
 			public ServletContext getServletContext() {
-				return getServletContextInsideHttpSession();
+				return getServletContext();
 			}
 
 			public int getMaxInactiveInterval() {
@@ -671,132 +693,177 @@ public class HttpServletRequestResponseObjects {
 		return httpSession;
 	}
 
-	private ServletContext getServletContextInsideHttpSession() {
+	private ServletContext getServletContext() {
 		ServletContext context = new ServletContext() {
+			String servletContextName;
+			private int minorVersion;
+			private int majorVersion;
+			private String contextPath;
+			private String serverInfo;
 
 			public void setAttribute(String name, Object object) {
-				// TODO Auto-generated method stub
+				responseServletContextMap.put(name, object);
 
 			}
 
 			public void removeAttribute(String name) {
-				// TODO Auto-generated method stub
+				responseServletContextMap.remove(name);
 
 			}
 
 			public void log(String message, Throwable throwable) {
-				// TODO Auto-generated method stub
+				responseServletContextLog.put(message, throwable);
 
 			}
 
 			public void log(Exception exception, String msg) {
-				// TODO Auto-generated method stub
+				responseServletContextLog.put(exception, msg);
 
 			}
 
 			public void log(String msg) {
-				// TODO Auto-generated method stub
+				responseServletContextLog.put(msg, null);
 
 			}
 
 			public Enumeration getServlets() {
-				// TODO Auto-generated method stub
-				return null;
+				Enumeration<Servlet> servlets = Collections.enumeration(responseServletContextServlets);
+				return servlets;
 			}
 
 			public Enumeration getServletNames() {
-				// TODO Auto-generated method stub
-				return null;
+				List<String> names = new ArrayList<String>();
+				if (responseServletContextServlets != null) {
+					for (Servlet servlet : responseServletContextServlets) {
+						names.add(servlet.getClass().getName());
+					}
+				}
+				return Collections.enumeration(names);
 			}
 
 			public String getServletContextName() {
-				// TODO Auto-generated method stub
-				return null;
+				return servletContextName;
 			}
 
 			public Servlet getServlet(String name) throws ServletException {
-				// TODO Auto-generated method stub
+				if (responseServletContextServlets != null) {
+					for (Servlet servlet : responseServletContextServlets) {
+						if (servlet.getClass().getName().equals(name))
+							;
+						{
+							return servlet;
+						}
+					}
+				}
 				return null;
 			}
 
 			public String getServerInfo() {
-				// TODO Auto-generated method stub
-				return null;
+				return serverInfo;
 			}
 
 			public Set getResourcePaths(String path) {
-				// TODO Auto-generated method stub
-				return null;
+				Set<String> resourcePaths = new HashSet<String>();
+				for (String p : responseServletContextResource) {
+					if (p.contains(path))
+						resourcePaths.add(p);
+				}
+				return resourcePaths;
+
 			}
 
 			public InputStream getResourceAsStream(String path) {
-				// TODO Auto-generated method stub
+
+				try {
+					File initialFile = new File(path);
+					InputStream targetStream = new FileInputStream(initialFile);
+					return targetStream;
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
 				return null;
 			}
 
 			public URL getResource(String path) throws MalformedURLException {
-				// TODO Auto-generated method stub
-				return null;
+				return new URL(path);
 			}
 
 			public RequestDispatcher getRequestDispatcher(String path) {
-				// TODO Auto-generated method stub
-				return null;
+				return new RequestDispatcher() {
+
+					public void include(ServletRequest request, ServletResponse response)
+							throws ServletException, IOException {
+						// do nothing
+
+					}
+
+					public void forward(ServletRequest request, ServletResponse response)
+							throws ServletException, IOException {
+						// do nothing
+
+					}
+				};
 			}
 
 			public String getRealPath(String path) {
-				// TODO Auto-generated method stub
-				return null;
+				return "http://localhost/" + path;
 			}
 
 			public RequestDispatcher getNamedDispatcher(String name) {
-				// TODO Auto-generated method stub
-				return null;
+				return new RequestDispatcher() {
+
+					public void include(ServletRequest request, ServletResponse response)
+							throws ServletException, IOException {
+						// do nothing
+
+					}
+
+					public void forward(ServletRequest request, ServletResponse response)
+							throws ServletException, IOException {
+						// do nothing
+
+					}
+				};
 			}
 
 			public int getMinorVersion() {
-				// TODO Auto-generated method stub
-				return 0;
+
+				return minorVersion;
 			}
 
 			public String getMimeType(String file) {
-				// TODO Auto-generated method stub
-				return null;
+				// we will no longer cover this
+				return "example mime type";
 			}
 
 			public int getMajorVersion() {
-				// TODO Auto-generated method stub
-				return 0;
+				return majorVersion;
 			}
 
 			public Enumeration getInitParameterNames() {
-				// TODO Auto-generated method stub
-				return null;
+				Enumeration<String> names = Collections.enumeration(responseServletContextInitParameter.keySet());
+				return names;
 			}
 
 			public String getInitParameter(String name) {
-				// TODO Auto-generated method stub
-				return null;
+				return responseServletContextInitParameter.get(name);
 			}
 
 			public String getContextPath() {
-				// TODO Auto-generated method stub
-				return null;
+				return contextPath;
 			}
 
 			public ServletContext getContext(String uripath) {
-				// TODO Auto-generated method stub
-				return null;
+				return getServletContext();
 			}
 
 			public Enumeration getAttributeNames() {
-				// TODO Auto-generated method stub
-				return null;
+				Enumeration<String> names = Collections.enumeration(responseServletContextMap.keySet());
+				return names;
 			}
 
 			public Object getAttribute(String name) {
-				// TODO Auto-generated method stub
-				return null;
+				return responseServletContextMap.get(name);
 			}
 		};
 		return context;
@@ -809,94 +876,94 @@ public class HttpServletRequestResponseObjects {
 				return new HttpSession() {
 
 					public void setMaxInactiveInterval(int interval) {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 
 					}
 
 					public void setAttribute(String name, Object value) {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 
 					}
 
 					public void removeValue(String name) {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 
 					}
 
 					public void removeAttribute(String name) {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 
 					}
 
 					public void putValue(String name, Object value) {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 
 					}
 
 					public boolean isNew() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return false;
 					}
 
 					public void invalidate() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 
 					}
 
 					public String[] getValueNames() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return null;
 					}
 
 					public Object getValue(String name) {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return null;
 					}
 
 					public HttpSessionContext getSessionContext() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return null;
 					}
 
 					public ServletContext getServletContext() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return null;
 					}
 
 					public int getMaxInactiveInterval() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return 0;
 					}
 
 					public long getLastAccessedTime() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return 0;
 					}
 
 					public String getId() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return null;
 					}
 
 					public long getCreationTime() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return 0;
 					}
 
 					public Enumeration getAttributeNames() {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return null;
 					}
 
 					public Object getAttribute(String name) {
-						// TODO Auto-generated method stub
+						// we will no longer cover this
 						return null;
 					}
 				};
 			}
 
 			public Enumeration getIds() {
-				// TODO Auto-generated method stub
+				// we will no longer cover this
 				return null;
 			}
 		};
