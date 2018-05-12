@@ -31,8 +31,6 @@ public class ExampleServletClass extends HttpServlet {
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
 
-		String name = exampleDaoClass.getLastName(1);
-
 		// create HTML form
 		PrintWriter writer = response.getWriter();
 		writer.append("<!DOCTYPE html>\r\n").append("<html>\r\n").append("		<head>\r\n")
@@ -52,20 +50,20 @@ public class ExampleServletClass extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 
 		String name = exampleDaoClass.getName(1);
-		String lastName = exampleDaoClass.getLastName(1);
 
 		// create HTML response
 		PrintWriter writer = response.getWriter();
-		writer.append("<!DOCTYPE html>\r\n").append("<html>\r\n").append("		<head>\r\n")
-				.append("			<title>Welcome message</title>\r\n").append("		</head>\r\n")
-				.append("		<body>\r\n");
 		if (user != null && !user.trim().isEmpty()) {
 			writer.append("	Welcome " + user + ".\r\n");
-			writer.append("	You successfully completed this javatutorial.net example.\r\n");
 		} else {
 			writer.append("	You did not entered a name!\r\n");
 		}
-		writer.append("		</body>\r\n").append("</html>\r\n");
+
+		if (name != null && !name.trim().isEmpty()) {
+			writer.append("	Entering your name:" + name + ".\r\n");
+		} else {
+			writer.append("	You did not entered a name!\r\n");
+		}
 
 		Cookie cookie = new Cookie("CookieName", "CookieValue");
 		response.addCookie(cookie);
