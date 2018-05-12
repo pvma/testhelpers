@@ -6,15 +6,15 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DoPostTest extends DoTestAbstract {
-	
-	public DoPostTest() {
+public class DoPutTest extends DoTestAbstract {
+
+	public DoPutTest() {
 		super();
 	}
 
 	public Object doTrigger() {
 		try {
-			Method method = servletInstance.getClass().getDeclaredMethod("doPost", HttpServletRequest.class,
+			Method method = servletInstance.getClass().getDeclaredMethod("doPut", HttpServletRequest.class,
 					HttpServletResponse.class);
 			return method.invoke(servletInstance, request, response);
 		} catch (IllegalAccessException e) {

@@ -2,7 +2,9 @@ package org.testhelpers.test.doPost;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
@@ -28,17 +30,22 @@ public class Test_HttpServletRequestResponseTestObject {
 		testObj.addRequestAttribute("user", "Paul");
 		testObj.addRequestParameter("user", "Paul");
 
-		testObj.triggerServletDoPost();
+		Map<String, String> initParameters = new HashMap<String, String>();
+		initParameters.put("test", "success");
+		testObj.setRequestHttpSessionServletContextInitParameter(initParameters);
+		testObj.doTrigger();
 
-		String data = testObj.getWriterData();
+		String result = testObj.getRequest().getSession().getServletContext().getInitParameter("test");
+
+		assertEquals(result, "success");
 
 		List<Cookie> cookieResponse = testObj.getCookiesInHttpResponse();
 
 		assertEquals(cookieResponse.get(0).getName(), "CookieName");
 
 	}
-	
-	@Test(expected=NullPointerException.class)
+
+	@Test
 	public void test_exception() {
 		DoPostTest testObj = new DoPostTest();
 		testObj.addRequestAttribute("param1", "value1");
@@ -54,9 +61,7 @@ public class Test_HttpServletRequestResponseTestObject {
 		testObj.addRequestAttribute("user", "Paul");
 		testObj.addRequestParameter("user", "Paul");
 
-		testObj.triggerServletDoPost();
-
-		String data = testObj.getWriterData();
+		testObj.doTrigger();
 
 		List<Cookie> cookieResponse = testObj.getCookiesInHttpResponse();
 
