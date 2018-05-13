@@ -13,7 +13,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.testhelpers.test.doPost.example.ExampleDaoClass;
 import org.testhelpers.test.doPost.example.ExampleServletClass;
 
-public class Test_HttpServletRequestResponseTestObject {
+public class Test_ExampleServletClass {
 	@Test
 	public void test_different_values() {
 

@@ -62,3 +62,11 @@ public void test_different_values() {
 
 ## Other notes:
 - Of course I used Junit here!
+
+## Purpose, Legal and Intention
+
+(i) Other codes and plugins reused here are not intended to infringe any copyright codes, but only for self learning and recreational purpose.
+
+Thus, if any part of this project's codes you may think have infringe any copyright codes, you may contact me and I can remove it.
+
+(ii) Note that this is as is, you can use it as long as you like and no guarantee from the creator  
